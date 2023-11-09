@@ -1,19 +1,29 @@
-import { Application, Sprite } from 'pixi.js'
+import { Application } from 'pixi.js'
+import { Agua } from './Agua';
+
+const particleCount = 2000;
 
 const app = new Application({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
 	backgroundColor: 0x6495ed,
-	width: 640,
-	height: 480
+	width: 1500,
+	height: 800
 });
 
-const clampy: Sprite = Sprite.from("clampy.png");
+let particles: Agua[] = [];
 
-clampy.anchor.set(0.5);
+for(let i = 0; i < particleCount; i++){
+	particles[i] = new Agua(-500 + Math.random() * 2000, -1600 + Math.random() * 1600, 20, -100);
+	app.stage.addChild(particles[i].object);
+}
 
-clampy.x = app.screen.width / 2;
-clampy.y = app.screen.height / 2;
-
-app.stage.addChild(clampy);
+app.ticker.add((delta) => {
+    // just for fun, let's rotate mr rabbit a little
+    // delta is 1 if running at 100% performance
+    // creates frame-independent transformation
+	for(let i = 0; i < particleCount; i++){
+		particles[i].update(delta);
+	}
+});
